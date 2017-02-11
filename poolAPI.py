@@ -12,7 +12,7 @@ print(poolStats['pool']['miners'])
 print(poolStats['pool']['totalBlocks'])
 
 def apiUpdate():
-    response = urlopen("http://usxmrpool.com:8117/stats")
+    response = urlopen("https://usxmrpool.com:8119/stats")
     poolStats = response.read()
     poolStats = poolStats.decode("utf-8")
     poolStats = ast.literal_eval(poolStats)
