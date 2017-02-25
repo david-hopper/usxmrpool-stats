@@ -1,6 +1,7 @@
 from tkinter import *
 from urllib.request import *
 import ast
+import ip_stats
 
 
 response = urlopen("https://www.usxmrpool.com:8119/stats")
@@ -17,6 +18,14 @@ def apiUpdate():
     poolStats = poolStats.decode("utf-8")
     poolStats = ast.literal_eval(poolStats)
     return(poolStats['pool']['hashrate'], poolStats['pool']['miners'], poolStats['pool']['totalBlocks'])
+
+def pingUpdate():
+    #Ping the pool ip with 3 repeats
+    pingAvg, pingStdDev = ip_stats.get_ping_stats("pool.usxmrpool.com", 3)
+
+    pingLabel['text'] = "Ping Time: %.2f" % pingAvg + "±%.2f" % pingStdDev + " ms"
+
+    root.after(10000, pingUpdate)
 
 def updateText():
     poolStatsTuple = apiUpdate()
@@ -52,7 +61,11 @@ minersLabel = Label(text = "", fg = "sky blue", bg = "black", padx = 120)
 minersLabel.grid()
 totalBlocksLabel = Label(text = "", fg = "sky blue", bg = "black", padx = 120)
 totalBlocksLabel.grid()
+pingLabel = Label(text = "", fg = "sky blue", bg = "black", padx = 120)
+pingLabel.grid()
+
 
 
 updateText()
+pingUpdate()
 root.mainloop()
